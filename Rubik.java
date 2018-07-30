@@ -1,356 +1,373 @@
 import java.util.Scanner;
 import java.util.Random;
+import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Container;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
+import java.awt.*;
 
 class Rubik
 {
-	public char[] r = new char[10];
-	public char[] l = new char[10];
-	public char[] u = new char[10];
-	public char[] d = new char[10];
-	public char[] f = new char[10];
-	public char[] b = new char[10];
-
-	public static void main(String args[])
-	{
-		Rubik cube = new Rubik();
-		cube.reset();
-		cube.print();
-
-		System.out.println("*****************");
-
-		cube.x();
-		cube.y();
-
-		cube.r();
-		cube.u();
-		cube.ri();
-		cube.ui();
-
-		cube.print();
-
-
-	}
-
-	public void reset()
-	{
-		for (int i = 1; i < 10; i++)
-			u[i] = 'y';
-		for (int i = 1; i < 10; i++)
-			d[i] = 'w';
-		for (int i = 1; i < 10; i++)
-			f[i] = 'b';
-		for (int i = 1; i < 10; i++)
-			b[i] = 'g';
-		for (int i = 1; i < 10; i++)
-			r[i] = 'r';
-		for (int i = 1; i < 10; i++)
-			l[i] = 'o';
-	}
-
-	public Rubik()
-	{
-		reset();
-	}
-
-	public void print()
-	{
-		System.out.println("Front:");
-		System.out.printf("%c %c %c\n", f[7], f[8], f[9]);
-		System.out.printf("%c %c %c\n", f[4], f[5], f[6]);
-		System.out.printf("%c %c %c\n", f[1], f[2], f[3]);
-		
-		System.out.println("\nBack:");
-		System.out.printf("%c %c %c\n", b[7], b[8], b[9]);
-		System.out.printf("%c %c %c\n", b[4], b[5], b[6]);
-		System.out.printf("%c %c %c\n", b[1], b[2], b[3]);
-		
-		System.out.println("\nRight:");
-		System.out.printf("%c %c %c\n", r[7], r[8], r[9]);
-		System.out.printf("%c %c %c\n", r[4], r[5], r[6]);
-		System.out.printf("%c %c %c\n", r[1], r[2], r[3]);
-		
-		System.out.println("\nLeft:");
-		System.out.printf("%c %c %c\n", l[7], l[8], l[9]);
-		System.out.printf("%c %c %c\n", l[4], l[5], l[6]);
-		System.out.printf("%c %c %c\n", l[1], l[2], l[3]);
-		
-		System.out.println("\nUp:");
-		System.out.printf("%c %c %c\n", u[7], u[8], u[9]);
-		System.out.printf("%c %c %c\n", u[4], u[5], u[6]);
-		System.out.printf("%c %c %c\n", u[1], u[2], u[3]);
-		
-		System.out.println("\nDown:");
-		System.out.printf("%c %c %c\n", d[7], d[8], d[9]);
-		System.out.printf("%c %c %c\n", d[4], d[5], d[6]);
-		System.out.printf("%c %c %c\n", d[1], d[2], d[3]);
-	}
-
-	public void swap(char[] f1, char[] f2, int x, int y)
-	{
-		char c = f1[x];
-		f1[x] = f2[y];
-		f2[y] = c;
-	}
-
-	//rotates single face   DOES NOT ROTATE BETWEEN FACES, ONLY THE 9 ON THE SIDE
-	public void rotate_face(char[] c)
-	{
-		//edges first
-		char temp = c[6];
-		c[6] = c[8];
-		c[8] = c[4];
-		c[4] = c[2];
-		c[2] = temp;
-
-		//now corners
-		temp = c[9];
-		c[9] = c[7];
-		c[7] = c[1];
-		c[1] = c[3];
-		c[3] = temp;
-	}
-
-	public void r()
-	{
-		char temp;
-		rotate_face(r);
-		temp = f[9];
-		f[9] = d[9];
-		d[9] = b[1];
-		b[1] = u[9];
-		u[9] = temp;
-
-		temp = f[6];
-		f[6] = d[6];
-		d[6] = b[4];
-		b[4] = u[6];
-		u[6] = temp;
-
-		temp = f[3];
-		f[3] = d[3];
-		d[3] = b[7];
-		b[7] = u[3];
-		u[3] = temp;
-	}
-
-	void l()
-	{
-		char temp;
-		rotate_face(l);
-		temp = f[7];
-		f[7] = u[7];
-		u[7] = b[3];
-		b[3] = d[7];
-		d[7] = temp;
-
-		temp = f[4];
-		f[4] = u[4];
-		u[4] = b[6];
-		b[6] = d[4];
-		d[4] = temp;
-
-		temp = f[1];
-		f[1] = u[1];
-		u[1] = b[9];
-		b[9] = d[1];
-		d[1] = temp;
-	}
-
-	void u()
-	{
-		char temp;
-		rotate_face(u);
-		temp = f[9];
-		f[9] = r[9];
-		r[9] = b[9];
-		b[9] = l[9];
-		l[9] = temp;
-
-		temp = f[8];
-		f[8] = r[8];
-		r[8] = b[8];
-		b[8] = l[8];
-		l[8] = temp;
-
-		temp = f[7];
-		f[7] = r[7];
-		r[7] = b[7];
-		b[7] = l[7];
-		l[7] = temp;
-
-	}
-
-	void d()
-	{
-		char temp;
-		rotate_face(d);
-		temp = f[1];
-		f[1] = l[1];
-		l[1] = b[1];
-		b[1] = r[1];
-		r[1] = temp;
-
-		temp = f[2];
-		f[2] = l[2];
-		l[2] = b[2];
-		b[2] = r[2];
-		r[2] = temp;
-
-		temp = f[3];
-		f[3] = l[3];
-		l[3] = b[3];
-		b[3] = r[3];
-		r[3] = temp;
-	}
-
-	void f()
-	{
-		char temp;
-		rotate_face(f);
-		temp = u[3];
-		u[3] = l[9];
-		l[9] = d[7];
-		d[7] = r[1];
-		r[1] = temp;
-
-		temp = u[2];
-		u[2] = l[6];
-		l[6] = d[8];
-		d[8] = r[4];
-		r[4] = temp;
-
-		temp = u[1];
-		u[1] = l[3];
-		l[3] = d[9];
-		d[9] = r[7];
-		r[7] = temp;
-	}
-
-	void b()
-	{
-		char temp;
-		rotate_face(b);
-		temp = u[9];
-		u[9] = r[3];
-		r[3] = d[1];
-		d[1] = l[7];
-		l[7] = temp;
-
-		temp = u[8];
-		u[8] = r[6];
-		r[6] = d[2];
-		d[2] = l[4];
-		l[4] = temp;
-
-		temp = u[7];
-		u[7] = r[9];
-		r[9] = d[3];
-		d[3] = l[1];
-		l[1] = temp;
-	}
-
-	void ri()
-	{r();r();r();}
-
-	void li()
-	{l();l();l();}
-
-	void ui()
-	{u();u();u();}
-
-	void di()
-	{d();d();d();}
-
-	void fi()
-	{f();f();f();}
-
-	void bi()
-	{b();b();b();}
-
-	void m()
-	{mi();mi();mi();}
-
-	void mi()
-	{
-		char temp = f[5];
-		f[5] = d[5];
-		d[5] = b[5];
-		b[5] = u[5];
-		u[5] = temp;
-
-		temp = f[8];
-		f[8] = d[8];
-		d[8] = b[2];
-		b[2] = u[8];
-		u[8] = temp;
-
-		temp = f[2];
-		f[2] = d[2];
-		d[2] = b[8];
-		b[8] = u[2];
-		u[2] = temp;
-	}
-
-	void e()
-	{
-		char temp = f[6];
-		f[6] = l[6];
-		l[6] = b[6];
-		b[6] = r[6];
-		r[6] = temp;
-
-		temp = f[5];
-		f[5] = l[5];
-		l[5] = b[5];
-		b[5] = r[5];
-		r[5] = temp;
-
-		temp = f[4];
-		f[4] = l[4];
-		l[4] = b[4];
-		b[4] = r[4];
-		r[4] = temp;
-	}
-
-	void ei()
-	{e();e();e();}
-
-	void s()
-	{
-		char temp = u[6];
-		u[6] = l[8];
-		l[8] = b[4];
-		b[4] = r[2];
-		r[2] = temp;
-
-		temp = u[5];
-		u[5] = l[5];
-		l[5] = b[5];
-		b[5] = r[5];
-		r[5] = temp;
-
-		temp = u[4];
-		u[4] = l[2];
-		l[2] = b[6];
-		b[6] = r[8];
-		r[8] = temp;
-	}
-
-	void si()
-	{s();s();s();}
-
-	void x()
-	{r();mi();li();}
-
-	void xi()
-	{x();x();x();}
-
-	void y()
-	{u();ei();di();}
-
-	void yi()
-	{y();y();y();}
-
-	void z()
-	{f();bi();s();}
+    public static void main(String[] args)
+    {
+        RubikFrame rf = new RubikFrame();
+    }
 }
+
+class RubikFrame extends JFrame
+    {
+        Cube cube = new Cube();
+        CubePanel cp;
+        JMenu menu;             //reference variables used to add menus and menu items
+        JMenuItem menuitem;
+
+        JDesktopPane jdp = new JDesktopPane();  //main panel
+        JMenuBar jmb = new JMenuBar();          //main menubar
+
+        RubikFrame()
+        {
+            setTitle("Harrison's Rubik's Cube Game (HRCG)");
+            setContentPane(jdp);
+
+            setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            setSize( 800, 600 ); // set frame size
+            setVisible( true ); // display frame
+
+            menu = new GameMenu();
+            jmb.add(menu);
+            setJMenuBar(jmb);
+
+            //Container container = getContentPane();
+                    //dafuq
+            GridLayout layout = new GridLayout(2, 2);
+            setLayout(layout);
+
+            cp = new CubePanel();
+            cp.setVisible(true);
+            jdp.add(cp);
+
+            SlicePanel sp = new SlicePanel();
+            sp.setVisible(true);
+            sp.setLayout(new GridLayout(2, 3));
+            jdp.add(sp);
+
+            FacePanel fp = new FacePanel();
+            fp.setVisible(true);
+            fp.setLayout(new GridLayout(2, 3));
+            jdp.add(fp);
+
+            PrimePanel pp = new PrimePanel();
+            pp.setVisible(true);
+            pp.setLayout(new GridLayout(2, 3));
+            jdp.add(pp);
+
+            jdp.validate();
+        }
+
+        private class GameMenu extends JMenu
+        {
+            GameMenu()
+            {
+                setLabel("Game Options");
+                menuitem = new JMenuItem("Reset Cube");
+                menuitem.addActionListener((ActionEvent e) -> {cube.reset();cp.repaint();});
+                add(menuitem);
+
+                menuitem = new JMenuItem("Scramble cube / Start timer");
+                menuitem.addActionListener((ActionEvent e) -> {cube.reset();});
+                add(menuitem);
+            }
+        }
+
+            //to hold the display of the cube
+        private class CubePanel extends JPanel
+        {
+            int cubiesize = 20;
+            int topcubiex;
+            int topcubiey;
+            int offset = 20;
+            int offsetx = 20;
+            int offsety = 20;
+
+            Polygon poly;
+
+            private Polygon makepolyu(int x, int y)
+            {
+                int[] pointsx = {x, x + offset, x, x - offset,};
+                int[] pointsy = {y, y + offset, y + offset * 2, y + offset};
+
+                return new Polygon(pointsx, pointsy, pointsx.length);
+            }
+
+            public void paintComponent(Graphics g)
+            {
+                super.paintComponent(g);
+                this.setBackground(Color.BLACK);
+                topcubiex = (int) (getSize().getWidth() * 0.5);
+                topcubiey = (int) (getSize().getHeight() * 0.1);
+                
+                paintu(g);
+                paintr(g);
+                paintf(g);
+                
+            }
+
+            private void paintu(Graphics g)
+            {
+                                                //template is as follows
+                setcolor(g, cube.u[7]);     //set color for the cubie
+                //g.fillRect(topcubiex, topcubiey,    //(x,y)
+                //    cubiesize, cubiesize);          //height and width
+                g.fillPolygon(makepolyu(topcubiex, topcubiey));
+
+                setcolor(g, cube.u[8]);
+                g.fillPolygon(makepolyu(topcubiex + offsetx + 1, topcubiey + offsety + 1));
+
+                setcolor(g, cube.u[9]);
+                g.fillPolygon(makepolyu(topcubiex + offsetx*2 + 2, topcubiey + offsety*2 + 2));
+
+                setcolor(g, cube.u[4]);
+                g.fillPolygon(makepolyu(topcubiex - offsetx - 1, topcubiey + offsety + 1));
+
+                setcolor(g, cube.u[5]);
+                g.fillPolygon(makepolyu(topcubiex, topcubiey + offsety*2 + 2));
+
+                setcolor(g, cube.u[6]);
+                g.fillPolygon(makepolyu(topcubiex + offsetx + 1, topcubiey + offsety*3 + 3));
+
+
+                /*setcolor(g, cube.u[8]);
+                g.fillRect(topcubiex + offset, topcubiey + offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[4]);
+                g.fillRect(topcubiex - offset, topcubiey + offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[5]);
+                g.fillOval(topcubiex, topcubiey + offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[1]);
+                g.fillRect(topcubiex - offset * 2, topcubiey + offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[9]);
+                g.fillRect(topcubiex + offset * 2, topcubiey + offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[2]);
+                g.fillRect(topcubiex - offset, topcubiey + offset * 3,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[6]);
+                g.fillRect(topcubiex + offset , topcubiey + offset * 3,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.u[3]);
+                g.fillRect(topcubiex, topcubiey + offset * 4,
+                    cubiesize, cubiesize);*/
+            }
+
+            private void paintr(Graphics g)
+            {
+                int maincubiex = topcubiex + offset / 2;
+                int maincubiey = topcubiey + offset * 5;
+
+                setcolor(g, cube.r[7]);
+                g.fillRect(maincubiex, maincubiey,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[8]);
+                g.fillRect(maincubiex + offset, maincubiey - offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[9]);
+                g.fillRect(maincubiex + offset * 2, maincubiey - offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[4]);
+                g.fillRect(maincubiex, maincubiey + offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[5]);
+                g.fillOval(maincubiex + offset, maincubiey,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[6]);
+                g.fillRect(maincubiex + offset * 2, maincubiey - offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[1]);
+                g.fillRect(maincubiex, maincubiey + offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[2]);
+                g.fillRect(maincubiex + offset, maincubiey + offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.r[3]);
+                g.fillRect(maincubiex + offset * 2, maincubiey,
+                    cubiesize, cubiesize);
+
+            }
+
+            private void paintf(Graphics g)
+            {
+                int maincubiex = topcubiex - offset / 2;
+                int maincubiey = topcubiey + offset * 5;
+
+                setcolor(g, cube.f[9]);
+                g.fillRect(maincubiex, maincubiey,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[8]);
+                g.fillRect(maincubiex - offset, maincubiey - offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[7]);
+                g.fillRect(maincubiex - offset * 2, maincubiey - offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[6]);
+                g.fillRect(maincubiex, maincubiey + offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[5]);
+                g.fillOval(maincubiex - offset, maincubiey,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[4]);
+                g.fillRect(maincubiex - offset * 2, maincubiey - offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[3]);
+                g.fillRect(maincubiex, maincubiey + offset * 2,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[2]);
+                g.fillRect(maincubiex - offset, maincubiey + offset,
+                    cubiesize, cubiesize);
+
+                setcolor(g, cube.f[1]);
+                g.fillRect(maincubiex - offset * 2, maincubiey,
+                    cubiesize, cubiesize);
+            }
+
+                //sets color of g to color that 'c' represents
+            private void setcolor(Graphics g, char c)
+            {
+                if(c == 'y') {g.setColor(Color.YELLOW); return;}
+                if(c == 'w') {g.setColor(Color.WHITE); return;}
+                if(c == 'r') {g.setColor(Color.RED); return;}
+                if(c == 'o') {g.setColor(Color.ORANGE); return;}
+                if(c == 'g') {g.setColor(Color.GREEN); return;}
+                if(c == 'b') {g.setColor(Color.BLUE); return;}
+            }
+        }
+
+            //to hold the buttons for regular face moves
+        private class FacePanel extends JPanel
+        {
+            JButton FaceButton;
+            FacePanel()
+            {
+                FaceButton = new JButton("r");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.r();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("u");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.u();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("f");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.f();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("l");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.l();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("d");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.d();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("b");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.b();cp.repaint();});
+                add(FaceButton);
+            }
+        }
+
+            //to hold the buttons for prime moves
+        private class PrimePanel extends JPanel
+        {
+            JButton FaceButton;
+            PrimePanel()
+            {
+                FaceButton = new JButton("ri");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.ri();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("ui");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.ui();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("fi");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.fi();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("li");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.li();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("di");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.di();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("bi");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.bi();cp.repaint();});
+                add(FaceButton);
+            }
+        }
+
+            //to hold the buttons for slice moves
+        private class SlicePanel extends JPanel
+        {
+            JButton FaceButton;
+            SlicePanel()
+            {
+                FaceButton = new JButton("m");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.m();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("e");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.e();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("s");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.s();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("mi");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.mi();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("ei");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.ei();cp.repaint();});
+                add(FaceButton);
+
+                FaceButton = new JButton("si");
+                FaceButton.addActionListener((ActionEvent e) -> {cube.si();cp.repaint();});
+                add(FaceButton);
+            }
+        }
+    }
