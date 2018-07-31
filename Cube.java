@@ -1,9 +1,45 @@
+//hmh16c
+//Harrison Hill
+//cop3252 game project
+//7/30/2018
+
+//This file houses the cube
+
+//the stickers, what color they are, how you can move it, etc
+
+
+//NOTATION
+
+/* SIDES:
+(U)p
+(D)own
+
+(R)ight
+(L)eft
+
+(F)ront
+(B)ack
+*/
+
+//stickers are laid out like a numpad on a keyboard:
+//789
+//456
+//123
+
+//assuming you are looking directly at the side in question.
+//IE, turning the cube 180 degrees would show that the (B)ack side 
+//has the same layout as the (F)ront side
+
+//The orientation is mostly standard except for the (D)own side.
+//here, just assume we did an X rotation, and you're looking at the side head on.
+//then it is laid out like a numpad as usual.
+
 import java.util.Random;
 
 class Cube
     {
 
-        public char[] r = new char[10];
+        public char[] r = new char[10];     //these are the colors
         public char[] l = new char[10];
         public char[] u = new char[10];
         public char[] d = new char[10];
@@ -26,7 +62,7 @@ class Cube
                 l[i] = 'o';
         }
 
-        public void scramble()
+        public void scramble()  //randomly does 30 moves
         {
             int max = 6;
             for (int i = 0; i < 30; i++)
@@ -44,7 +80,7 @@ class Cube
         public Cube()
         {reset();}
 
-        public void print()
+        public void print() //used for testing before the UI was done
         {
             System.out.println("Front:");
             System.out.printf("%c %c %c\n", f[7], f[8], f[9]);
@@ -77,7 +113,7 @@ class Cube
             System.out.printf("%c %c %c\n", d[1], d[2], d[3]);
         }
 
-        public void swap(char[] f1, char[] f2, int x, int y)
+        public void swap(char[] f1, char[] f2, int x, int y)    //unused?
         {
             char c = f1[x];
             f1[x] = f2[y];
