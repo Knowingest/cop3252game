@@ -1,3 +1,5 @@
+import java.util.Random;
+
 class Cube
     {
 
@@ -22,6 +24,21 @@ class Cube
                 r[i] = 'r';
             for (int i = 1; i < 10; i++)
                 l[i] = 'o';
+        }
+
+        public void scramble()
+        {
+            int max = 6;
+            for (int i = 0; i < 30; i++)
+            {
+                int r = 0 + (int)(Math.random() * 5);
+                if (r == 0) u();
+                else if (r == 1) d();
+                else if (r == 2) r();
+                else if (r == 3) l();
+                else if (r == 4) f();
+                else if (r == 5) b();
+            }
         }
 
         public Cube()

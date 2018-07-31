@@ -25,13 +25,49 @@ class Rubik
 
 class RubikFrame extends JFrame
     {
+    	boolean gamewon = false;
+    	boolean gamestarted = false;
         Cube cube = new Cube();
         CubePanel cp;
         JMenu menu;             //reference variables used to add menus and menu items
         JMenuItem menuitem;
 
+        Color ORANJI = new Color(255,128,0);
+
         JDesktopPane jdp = new JDesktopPane();  //main panel
         JMenuBar jmb = new JMenuBar();          //main menubar
+
+        private void checkwin()
+        {
+        	if(gamestarted == false) return;
+
+        	char c;
+        	c = cube.u[5];
+        	for (int i = 1; i < 10; i++)
+        		if (c != cube.u[i]) return;
+
+        	c = cube.d[5];
+        	for (int i = 1; i < 10; i++)
+        		if (c != cube.d[i]) return;
+
+        	c = cube.r[5];
+        	for (int i = 1; i < 10; i++)
+        		if (c != cube.r[i]) return;
+
+        	c = cube.l[5];
+        	for (int i = 1; i < 10; i++)
+        		if (c != cube.l[i]) return;
+
+        	c = cube.f[5];
+        	for (int i = 1; i < 10; i++)
+        		if (c != cube.f[i]) return;
+
+        	c = cube.b[5];
+        	for (int i = 1; i < 10; i++)
+        		if (c != cube.b[i]) return;
+
+        	JOptionPane.showMessageDialog(jdp, "Congratulations!  You won!");
+        }
 
         RubikFrame()
         {
@@ -79,11 +115,14 @@ class RubikFrame extends JFrame
             {
                 setLabel("Game Options");
                 menuitem = new JMenuItem("Reset Cube");
-                menuitem.addActionListener((ActionEvent e) -> {cube.reset();cp.repaint();});
+                menuitem.addActionListener((ActionEvent e) -> {cube.reset();cp.repaint();
+                												gamewon = false; gamestarted = false;
+                											JOptionPane.showMessageDialog(jdp, "Congratulations!  You won!");});
                 add(menuitem);
 
-                menuitem = new JMenuItem("Scramble cube / Start timer");
-                menuitem.addActionListener((ActionEvent e) -> {cube.reset();});
+                menuitem = new JMenuItem("Scramble cube / start game");
+                menuitem.addActionListener((ActionEvent e) -> {cube.scramble();cp.repaint();
+                												gamewon = false; gamestarted = true;});
                 add(menuitem);
             }
         }
@@ -108,6 +147,21 @@ class RubikFrame extends JFrame
                 return new Polygon(pointsx, pointsy, pointsx.length);
             }
 
+            private Polygon makepolyr(int x, int y)
+            {
+            	int[] pointsx = {x, x + offset, x + offset, x};
+            	int[] pointsy = {y, y - offset, y, y + offset};
+
+            	return new Polygon(pointsx, pointsy, pointsx.length);
+            }
+
+            private Polygon makepolyf(int x, int y)
+            {
+            	int[] pointsx = {x, x - offset, x - offset, x};
+            	int[] pointsy = {y, y - offset, y, y + offset};
+            	return new Polygon(pointsx, pointsy, pointsx.length);
+            }
+
             public void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
@@ -118,6 +172,8 @@ class RubikFrame extends JFrame
                 paintu(g);
                 paintr(g);
                 paintf(g);
+
+
                 
             }
 
@@ -144,123 +200,82 @@ class RubikFrame extends JFrame
                 setcolor(g, cube.u[6]);
                 g.fillPolygon(makepolyu(topcubiex + offsetx + 1, topcubiey + offsety*3 + 3));
 
-
-                /*setcolor(g, cube.u[8]);
-                g.fillRect(topcubiex + offset, topcubiey + offset,
-                    cubiesize, cubiesize);
-
-                setcolor(g, cube.u[4]);
-                g.fillRect(topcubiex - offset, topcubiey + offset,
-                    cubiesize, cubiesize);
-
-                setcolor(g, cube.u[5]);
-                g.fillOval(topcubiex, topcubiey + offset * 2,
-                    cubiesize, cubiesize);
-
                 setcolor(g, cube.u[1]);
-                g.fillRect(topcubiex - offset * 2, topcubiey + offset * 2,
-                    cubiesize, cubiesize);
-
-                setcolor(g, cube.u[9]);
-                g.fillRect(topcubiex + offset * 2, topcubiey + offset * 2,
-                    cubiesize, cubiesize);
+                g.fillPolygon(makepolyu(topcubiex - offsetx*2 - 2, topcubiey + offsety*2 + 2));
 
                 setcolor(g, cube.u[2]);
-                g.fillRect(topcubiex - offset, topcubiey + offset * 3,
-                    cubiesize, cubiesize);
-
-                setcolor(g, cube.u[6]);
-                g.fillRect(topcubiex + offset , topcubiey + offset * 3,
-                    cubiesize, cubiesize);
+                g.fillPolygon(makepolyu(topcubiex - offset - 1, topcubiey + offsety*3 + 3));
 
                 setcolor(g, cube.u[3]);
-                g.fillRect(topcubiex, topcubiey + offset * 4,
-                    cubiesize, cubiesize);*/
+                g.fillPolygon(makepolyu(topcubiex, topcubiey + offsety*4 + 4));
             }
 
             private void paintr(Graphics g)
             {
-                int maincubiex = topcubiex + offset / 2;
-                int maincubiey = topcubiey + offset * 5;
+            	int topleftx = topcubiex + 1;
+            	int toplefty = topcubiey + offset*6 + 7;
 
-                setcolor(g, cube.r[7]);
-                g.fillRect(maincubiex, maincubiey,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[7]);
+            	g.fillPolygon(makepolyr(topleftx, toplefty));
 
-                setcolor(g, cube.r[8]);
-                g.fillRect(maincubiex + offset, maincubiey - offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[8]);
+            	g.fillPolygon(makepolyr(topleftx + offset + 1, toplefty - offset - 1));
 
-                setcolor(g, cube.r[9]);
-                g.fillRect(maincubiex + offset * 2, maincubiey - offset * 2,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[9]);
+            	g.fillPolygon(makepolyr(topleftx + offset*2 + 2, toplefty - offset*2 - 2));
 
-                setcolor(g, cube.r[4]);
-                g.fillRect(maincubiex, maincubiey + offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[4]);
+            	g.fillPolygon(makepolyr(topleftx, toplefty + offset + 1));
 
-                setcolor(g, cube.r[5]);
-                g.fillOval(maincubiex + offset, maincubiey,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[5]);
+            	g.fillPolygon(makepolyr(topleftx + offset + 1, toplefty));
 
-                setcolor(g, cube.r[6]);
-                g.fillRect(maincubiex + offset * 2, maincubiey - offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[6]);
+            	g.fillPolygon(makepolyr(topleftx + offset*2 + 2, toplefty - offset - 1));
 
-                setcolor(g, cube.r[1]);
-                g.fillRect(maincubiex, maincubiey + offset * 2,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[1]);
+            	g.fillPolygon(makepolyr(topleftx, toplefty + offset*2 + 2));
 
-                setcolor(g, cube.r[2]);
-                g.fillRect(maincubiex + offset, maincubiey + offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.r[2]);
+            	g.fillPolygon(makepolyr(topleftx + offset + 1, toplefty + offset + 1));
 
-                setcolor(g, cube.r[3]);
-                g.fillRect(maincubiex + offset * 2, maincubiey,
-                    cubiesize, cubiesize);
-
+            	setcolor(g, cube.r[3]);
+            	g.fillPolygon(makepolyr(topleftx + offset*2 + 2, toplefty));
             }
 
             private void paintf(Graphics g)
             {
-                int maincubiex = topcubiex - offset / 2;
-                int maincubiey = topcubiey + offset * 5;
+                int topleftx = topcubiex + 1;
+            	int toplefty = topcubiey + offset*6 + 7;
 
-                setcolor(g, cube.f[9]);
-                g.fillRect(maincubiex, maincubiey,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[9]);
+            	g.fillPolygon(makepolyf(topleftx, toplefty));
 
-                setcolor(g, cube.f[8]);
-                g.fillRect(maincubiex - offset, maincubiey - offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[8]);
+            	g.fillPolygon(makepolyf(topleftx - offset - 1, toplefty - offset - 1));
 
-                setcolor(g, cube.f[7]);
-                g.fillRect(maincubiex - offset * 2, maincubiey - offset * 2,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[7]);
+            	g.fillPolygon(makepolyf(topleftx - offset*2 - 2, toplefty - offset*2 - 2));
 
-                setcolor(g, cube.f[6]);
-                g.fillRect(maincubiex, maincubiey + offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[6]);
+            	g.fillPolygon(makepolyf(topleftx, toplefty + offset + 1));
 
-                setcolor(g, cube.f[5]);
-                g.fillOval(maincubiex - offset, maincubiey,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[5]);
+            	g.fillPolygon(makepolyf(topleftx - offset - 1, toplefty));
 
-                setcolor(g, cube.f[4]);
-                g.fillRect(maincubiex - offset * 2, maincubiey - offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[4]);
+            	g.fillPolygon(makepolyf(topleftx - offset*2 - 2, toplefty - offset - 1));
 
-                setcolor(g, cube.f[3]);
-                g.fillRect(maincubiex, maincubiey + offset * 2,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[3]);
+            	g.fillPolygon(makepolyf(topleftx, toplefty + offset*2 + 2));
 
-                setcolor(g, cube.f[2]);
-                g.fillRect(maincubiex - offset, maincubiey + offset,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[2]);
+            	g.fillPolygon(makepolyf(topleftx - offset - 1, toplefty + offset + 1));
 
-                setcolor(g, cube.f[1]);
-                g.fillRect(maincubiex - offset * 2, maincubiey,
-                    cubiesize, cubiesize);
+            	setcolor(g, cube.f[1]);
+            	g.fillPolygon(makepolyf(topleftx - offset*2 - 2, toplefty));
+
+                
             }
 
                 //sets color of g to color that 'c' represents
@@ -269,7 +284,7 @@ class RubikFrame extends JFrame
                 if(c == 'y') {g.setColor(Color.YELLOW); return;}
                 if(c == 'w') {g.setColor(Color.WHITE); return;}
                 if(c == 'r') {g.setColor(Color.RED); return;}
-                if(c == 'o') {g.setColor(Color.ORANGE); return;}
+                if(c == 'o') {g.setColor(ORANJI); return;}
                 if(c == 'g') {g.setColor(Color.GREEN); return;}
                 if(c == 'b') {g.setColor(Color.BLUE); return;}
             }
