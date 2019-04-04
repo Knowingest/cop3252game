@@ -34,6 +34,9 @@
 //here, just assume we did an X rotation, and you're looking at the side head on.
 //then it is laid out like a numpad as usual.
 
+//there is probably a way to simplify this code, but since each side of the cube needs
+//to be modified in a slightly different way, I did it all by hand.
+
 import java.util.Random;
 
 class Cube

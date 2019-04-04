@@ -7,12 +7,18 @@
 this isn't REALLY ~700 lines of code.
 
 a huge portion of this is... not copypasted code, but code that mirrors other code,
-or repeats with slight differences.
+or repeats with slight differences.  The line count could be reduced by having more 
+in depth function parameters, but TLDR it isn't as bad as it looks.
 
-there are probably ways to reduce the line count, but it isn't as bad as it looks.
+Each side of the cube needs to be handled slightly differently, so doing it "by hand" 
+isn't really as bad of a solution as it first looks.
 
-a huge portion of it is taken up by the paintComponent() section for the cube window,
+a huge portion of the line count is taken up by the paintComponent() section for the cube window,
 and by the declarations for 21 different JButtons
+
+If I were to revisit this program I would redo at least the paintalpha functions,
+probably by adding a parameter to determine if I'm painting an alpha layer, rather than
+having a whole different function.
 
 The Cube.java file isn't truly 400 lines either, it's almost all taken up by the 
 process of switching sticker colors from sticker to sticker as a side moves.
@@ -163,6 +169,9 @@ class RubikFrame extends JFrame
             //ABANDON HOPE ALL WHO ENTER HERE
         private class CubePanel extends JPanel
         {
+            //these offsets are literally just guesses
+
+                //a cubie is actually the real term for a cube piece!
             int cubiesize = 20;
             int topcubiex;
             int topcubiey;
